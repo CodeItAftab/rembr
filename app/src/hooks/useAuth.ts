@@ -56,6 +56,18 @@ export function useAuth() {
 
       if (access_token && refresh_token) {
         await supabase.auth.setSession({ access_token, refresh_token });
+
+        const { data: { session: newSession } } = await supabase.auth.getSession();
+
+        if (newSession?.provider_refresh_token) {
+          const { error: fnError } = await supabase.functions.invoke("save-gmail-token", {
+            body: { refresh_token: newSession.provider_refresh_token },
+          });
+
+          if (fnError) {
+            console.error("Failed to save Gmail token:", fnError);
+          }
+        }
       }
     }
   };
