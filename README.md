@@ -20,8 +20,8 @@ Rembr scans your email for task-related deadlines, converts them into structured
 ## Build stages
 
 - [x] Stage 0 — Foundations & project setup
-- [ ] Stage 1 — Auth & app skeleton
-- [ ] Stage 2 — Gmail sync (on-demand)
+- [x] Stage 1 — Auth & app skeleton
+- [x] Stage 2 — Gmail sync (on-demand)
 - [ ] Stage 3 — Task extraction
 - [ ] Stage 4 — Scheduled polling (cron)
 - [ ] Stage 5 — Notifications & reminders
