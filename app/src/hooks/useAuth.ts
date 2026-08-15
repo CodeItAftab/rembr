@@ -33,6 +33,11 @@ export function useAuth() {
       options: {
         redirectTo: redirectUrl,
         skipBrowserRedirect: true,
+        scopes: "https://www.googleapis.com/auth/gmail.readonly",
+        queryParams: {
+          access_type: "offline",
+          prompt: "consent",
+        },
       },
     });
 
