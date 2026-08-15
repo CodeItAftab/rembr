@@ -1,3 +1,4 @@
+import { Alert } from "react-native";
 import { useEffect, useState } from "react";
 import * as WebBrowser from "expo-web-browser";
 import * as Linking from "expo-linking";
@@ -53,16 +54,23 @@ export function useAuth() {
       const params = new URLSearchParams(url.split("#")[1]);
       const access_token = params.get("access_token");
       const refresh_token = params.get("refresh_token");
+      const provider_refresh_token = params.get("provider_refresh_token");
 
       if (access_token && refresh_token) {
         await supabase.auth.setSession({ access_token, refresh_token });
 
-        const { data: { session: newSession } } = await supabase.auth.getSession();
+        console.log(
+          "Provider refresh token present:",
+          !!provider_refresh_token,
+        );
 
-        if (newSession?.provider_refresh_token) {
-          const { error: fnError } = await supabase.functions.invoke("save-gmail-token", {
-            body: { refresh_token: newSession.provider_refresh_token },
-          });
+        if (provider_refresh_token) {
+          const { error: fnError } = await supabase.functions.invoke(
+            "save-gmail-token",
+            {
+              body: { refresh_token: provider_refresh_token },
+            },
+          );
 
           if (fnError) {
             console.error("Failed to save Gmail token:", fnError);
