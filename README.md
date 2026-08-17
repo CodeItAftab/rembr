@@ -36,4 +36,4 @@ npx expo start
 
 ## License
 
-TBD
+MIT License
