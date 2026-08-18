@@ -20,17 +20,35 @@ export default function DashboardScreen() {
     setLastResult(null);
     try {
       const { data, error } = await supabase.functions.invoke("sync-gmail");
-
-      console.log("Full response data:", JSON.stringify(data));
-      console.log("Full response error:", JSON.stringify(error));
+      console.log("sync-gmail data:", JSON.stringify(data));
+      console.log("sync-gmail error:", JSON.stringify(error, null, 2));
 
       if (error) {
         Alert.alert("Sync failed", error.message ?? "Unknown error");
         return;
       }
 
-      setLastResult(`Scanned ${data.scanned} emails`);
+      const { data: extractData, error: extractError } =
+        await supabase.functions.invoke("extract-tasks");
+      console.log("extract-tasks data:", JSON.stringify(extractData));
+      console.log(
+        "extract-tasks error:",
+        JSON.stringify(extractError, null, 2),
+      );
+
+      if (extractError) {
+        Alert.alert(
+          "Extraction failed",
+          extractError.message ?? "Unknown error",
+        );
+        return;
+      }
+
+      setLastResult(
+        `Scanned ${data.scanned} emails, found ${extractData.tasksCreated} tasks`,
+      );
     } catch (err: any) {
+      console.log("Unexpected error:", err);
       Alert.alert("Sync failed", err.message ?? "Unknown error");
     } finally {
       setSyncing(false);
